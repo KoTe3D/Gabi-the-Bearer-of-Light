@@ -152,8 +152,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 25.454, y: 0.000020981}
+  m_SizeDelta: {x: 438.11, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &254250984
 MonoBehaviour:
@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0bc6b1a946ccca469080c2830673a6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gabi.Dialogue.DialoguePresenter
-  _scene: {fileID: 0}
+  _scene: {fileID: 11400000, guid: 4cdefe345ff6c6f418b5d67ba7d16d6d, type: 2}
   _speakerText: {fileID: 1302514739}
   _lineText: {fileID: 1522308326}
   _choiceContainer: {fileID: 254250983}
@@ -615,7 +615,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 365, y: 80.6}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1302514738
@@ -836,8 +836,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 22.2359, y: -4.6324}
+  m_SizeDelta: {x: 389.7708, y: 96.7075}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1522308323
 GameObject:
@@ -873,8 +873,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 25.4546, y: 0}
+  m_SizeDelta: {x: 438.109, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1522308325
 CanvasRenderer:

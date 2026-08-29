@@ -16,6 +16,17 @@ Narrative adventure / visual novel with survival mechanics. The player makes cho
 
 
 
+Art Direction (Approved, updated)
+---
+
+* World / backgrounds: pixel art (low-res, chunky pixels, Point filter).
+* Characters / avatars: detailed or lightly pixelated high-res art — sharp and readable, NOT chunky pixel art (Bilinear filter).
+* Purpose: contrast; the player can examine characters during dialogue.
+* Res guide: character art \~1024–2048 px tall, PNG RGBA; backgrounds \~480×270–640×360.
+* «Detailed vs slightly pixelated» — final call on first real sprite, compare in-engine.
+
+
+
 ### Core Gameplay Loop
 
 * Observe the scene and read dialogue.
@@ -64,4 +75,15 @@ Narrative adventure / visual novel with survival mechanics. The player makes cho
 
 * Dialogue advance: ЛКМ в любое место экрана (кроме интерактивных UI-элементов) или Space.
 * Choices: навести курсор + клик по фразе-выбору.
+
+
+
+### Avatar Staging (Approved, from GDD)
+
+* Character appears on their line and persists until scene end or eviction.
+* Max 6 on screen: 3 left + 3 right.
+* Initiator holds the edge slot of their side; the interlocutor is always on the left.
+* Joiners stack around the side anchor (2nd slightly inner and lower, 3rd outer);
+* FIFO eviction when a 4th joins a side.
+* Dialogue window slightly blurs everything behind it (реализация — вместе с артом/URP).
 
