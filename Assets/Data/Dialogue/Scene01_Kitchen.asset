@@ -197,3 +197,9 @@ MonoBehaviour:
       Text: 
     Choices: []
     NextSceneName: 
+  _cast:
+  - Character: {fileID: 11400000, guid: 5f9b87877cc13f4449f07250acc028f6, type: 2}
+    Side: 1
+  - Character: {fileID: 11400000, guid: b506938754e21be43adf1139119da8ce, type: 2}
+    Side: 0
+  _backgroundColor: {r: 0.37254903, g: 0.6431373, b: 0.43529415, a: 1}

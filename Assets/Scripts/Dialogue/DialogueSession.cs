@@ -1,14 +1,16 @@
+using System.Collections.Generic;
+
 namespace Gabi.Dialogue
 {
     // Plain C#: детерминированная логика диалога, тестируется без Unity.
     public sealed class DialogueSession
     {
-        private readonly DialogueScene _scene;
+        private readonly IReadOnlyList<DialogueNode> _nodes;
         private readonly StoryFlags _flags;
 
-        public DialogueSession(DialogueScene scene, StoryFlags flags)
+        public DialogueSession(IReadOnlyList<DialogueNode> nodes, StoryFlags flags)
         {
-            _scene = scene;
+            _nodes = nodes;
             _flags = flags;
             GoTo(0);
         }
@@ -17,7 +19,7 @@ namespace Gabi.Dialogue
         public bool IsFinished { get; private set; }
         public string RequestedNextScene { get; private set; }
 
-        public DialogueNode CurrentNode => _scene.Nodes[CurrentNodeIndex];
+        public DialogueNode CurrentNode => _nodes[CurrentNodeIndex];
 
         public bool CanAdvance => !IsFinished && CurrentNode.Kind == DialogueNodeKind.Line;
 

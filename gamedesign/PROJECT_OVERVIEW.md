@@ -16,8 +16,7 @@ Narrative adventure / visual novel with survival mechanics. The player makes cho
 
 
 
-Art Direction (Approved, updated)
----
+## Art Direction (Approved, updated)
 
 * World / backgrounds: pixel art (low-res, chunky pixels, Point filter).
 * Characters / avatars: detailed or lightly pixelated high-res art — sharp and readable, NOT chunky pixel art (Bilinear filter).
@@ -86,4 +85,5 @@ Art Direction (Approved, updated)
 * Joiners stack around the side anchor (2nd slightly inner and lower, 3rd outer);
 * FIFO eviction when a 4th joins a side.
 * Dialogue window slightly blurs everything behind it (реализация — вместе с артом/URP).
+* Active speaker is drawn on top of the other avatars on their side (brought to front on each line).
 

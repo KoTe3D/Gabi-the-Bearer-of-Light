@@ -16,6 +16,12 @@ namespace Gabi.Dialogue
         StageDirection
     }
 
+    public enum DialogueSide
+    {
+        Left,
+        Right
+    }
+
     [System.Serializable]
     public sealed class DialogueLine
     {
@@ -30,6 +36,13 @@ namespace Gabi.Dialogue
         public string Label;
         public int NextNodeIndex;
         public List<string> FlagsToSet = new List<string>();
+    }
+
+    [System.Serializable]
+    public sealed class CastEntry
+    {
+        public CharacterDefinition Character;
+        public DialogueSide Side = DialogueSide.Right;
     }
 
     [System.Serializable]
