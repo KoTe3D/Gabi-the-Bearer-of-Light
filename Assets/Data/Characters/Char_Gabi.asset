@@ -14,3 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Gabi.Dialogue.CharacterDefinition
   _displayName: "\u0413\u0430\u0431\u0438"
   _placeholderColor: {r: 1, g: 0, b: 0.07135892, a: 1}
+  _emotions:
+  - Name: anger
+    Sprite: {fileID: 1728380493432590200, guid: 55affd3785d5f174faa7e6cf009fe5e0, type: 3}
+  - Name: joy
+    Sprite: {fileID: 5511286113057516819, guid: 568c4bd3cc8a3ce4d911d4de1496363a, type: 3}
+  - Name: sadness
+    Sprite: {fileID: 3301570477846064282, guid: 9393b6652a766124b906cb2f710e472e, type: 3}

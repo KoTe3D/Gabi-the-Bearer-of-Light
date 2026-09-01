@@ -28,6 +28,7 @@ namespace Gabi.Dialogue
         public DialogueLineKind Kind = DialogueLineKind.Spoken;
         public string Speaker;
         public string Text;
+        public string Emotion;
     }
 
     [System.Serializable]

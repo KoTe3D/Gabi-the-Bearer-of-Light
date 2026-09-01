@@ -11,6 +11,14 @@ namespace Gabi.Dialogue
     {
         private const int MaxAvatarsPerSide = 3;
 
+        // Куда «смотрят» исходные картинки персонажей.
+        private enum SourceOrientation
+        {
+            FacesLeft,
+            FacesRight,
+            Front
+        }
+
         [SerializeField] private StoryFlow _flow;
         [SerializeField] private TextMeshProUGUI _speakerText;
         [SerializeField] private TextMeshProUGUI _lineText;
@@ -20,6 +28,7 @@ namespace Gabi.Dialogue
         [SerializeField] private Image _dialogPanel;
         [SerializeField] private RectTransform _avatarRoot;
         [SerializeField] private RectTransform _avatarTemplate;
+        [SerializeField] private SourceOrientation _sourceOrientation = SourceOrientation.FacesLeft;
         [SerializeField] private Color _normalColor = Color.white;
         [SerializeField] private Color _thoughtColor = new Color(0.75f, 0.75f, 0.75f);
         [SerializeField] private Color _stageColor = new Color(0.9f, 0.85f, 0.6f);
@@ -85,9 +94,23 @@ namespace Gabi.Dialogue
         {
             _currentScene = scene;
             _session = new DialogueSession(scene.Nodes, _flags);
-            _backgroundImage.color = scene.BackgroundColor;
+            ApplyBackground(scene);
             ClearAvatars();
             ShowCurrentNode();
+        }
+
+        private void ApplyBackground(DialogueScene scene)
+        {
+            if (scene.Background != null)
+            {
+                _backgroundImage.sprite = scene.Background;
+                _backgroundImage.color = Color.white;
+            }
+            else
+            {
+                _backgroundImage.sprite = null;
+                _backgroundImage.color = scene.BackgroundColor;
+            }
         }
 
         private void StartFlow()
@@ -173,7 +196,7 @@ namespace Gabi.Dialogue
 
             if (!isStage)
             {
-                ShowAvatarFor(line.Speaker);
+                ShowAvatarFor(line.Speaker, line.Emotion);
             }
         }
 
@@ -182,7 +205,7 @@ namespace Gabi.Dialogue
             _dialogPanel.color = isFog ? _panelThoughtFogColor : _panelNormalColor;
         }
 
-        private void ShowAvatarFor(string speakerName)
+        private void ShowAvatarFor(string speakerName, string emotionName)
         {
             var entry = FindCastEntry(speakerName);
             if (entry == null)
@@ -196,10 +219,11 @@ namespace Gabi.Dialogue
             {
                 // Говорящий отрисовывается поверх остальных на своей стороне.
                 visible.Root.SetAsLastSibling();
+                ApplyPortrait(visible, entry.Character, emotionName);
                 return;
             }
 
-            JoinSide(entry, queue);
+            JoinSide(entry, queue, emotionName);
         }
 
         private CastEntry FindCastEntry(string speakerName)
@@ -233,7 +257,7 @@ namespace Gabi.Dialogue
             return null;
         }
 
-        private void JoinSide(CastEntry entry, Queue<AvatarInstance> queue)
+        private void JoinSide(CastEntry entry, Queue<AvatarInstance> queue, string emotionName)
         {
             int slot;
             if (queue.Count >= MaxAvatarsPerSide)
@@ -247,7 +271,7 @@ namespace Gabi.Dialogue
                 slot = FirstFreeSlot(queue);
             }
 
-            queue.Enqueue(CreateAvatar(entry, slot));
+            queue.Enqueue(CreateAvatar(entry, slot, emotionName));
         }
 
         private int FirstFreeSlot(Queue<AvatarInstance> queue)
@@ -273,7 +297,7 @@ namespace Gabi.Dialogue
             return 0;
         }
 
-        private AvatarInstance CreateAvatar(CastEntry entry, int slot)
+        private AvatarInstance CreateAvatar(CastEntry entry, int slot, string emotionName)
         {
             var root = Instantiate(_avatarTemplate, _avatarRoot);
             root.gameObject.SetActive(true);
@@ -284,18 +308,64 @@ namespace Gabi.Dialogue
             root.anchoredPosition = Vector2.zero;
 
             var portrait = root.GetComponent<Image>();
-            portrait.color = entry.Character.PlaceholderColor;
             portrait.raycastTarget = false;
             var nameLabel = root.GetComponentInChildren<TMP_Text>();
             nameLabel.text = entry.Character.DisplayName;
             nameLabel.raycastTarget = false;
 
-            return new AvatarInstance
+            // Зеркалим персонажа к центру: минус-масштаб по X, а табличке имени — встречный флип,
+            // чтобы текст не отзеркалился.
+            var flip = NeedsFlip(entry.Side);
+            root.localScale = new Vector3(flip ? -1f : 1f, 1f, 1f);
+            nameLabel.transform.localScale = new Vector3(flip ? -1f : 1f, 1f, 1f);
+
+            var instance = new AvatarInstance
             {
                 Character = entry.Character,
                 SlotIndex = slot,
-                Root = root
+                Root = root,
+                Portrait = portrait
             };
+
+            ApplyPortrait(instance, entry.Character, emotionName);
+            return instance;
+        }
+
+        // Персонажи должны «смотреть» к центру: зеркалим сторону, противоположную исходному развороту арта.
+        private bool NeedsFlip(DialogueSide side)
+        {
+            switch (_sourceOrientation)
+            {
+                case SourceOrientation.FacesLeft:
+                    return side == DialogueSide.Left;
+                case SourceOrientation.FacesRight:
+                    return side == DialogueSide.Right;
+                default:
+                    return false;
+            }
+        }
+
+        private static void ApplyPortrait(AvatarInstance instance, CharacterDefinition character, string emotionName)
+        {
+            var sprite = character.GetSprite(emotionName);
+            if (sprite == instance.CurrentSprite)
+            {
+                return;
+            }
+
+            instance.CurrentSprite = sprite;
+            if (sprite != null)
+            {
+                instance.Portrait.sprite = sprite;
+                instance.Portrait.color = Color.white;
+                instance.Portrait.preserveAspect = true;
+            }
+            else
+            {
+                instance.Portrait.sprite = null;
+                instance.Portrait.color = character.PlaceholderColor;
+                instance.Portrait.preserveAspect = false;
+            }
         }
 
         private void ClearAvatars()
@@ -345,6 +415,8 @@ namespace Gabi.Dialogue
             public CharacterDefinition Character;
             public int SlotIndex;
             public RectTransform Root;
+            public Image Portrait;
+            public Sprite CurrentSprite;
         }
     }
 }

@@ -86,4 +86,6 @@ Narrative adventure / visual novel with survival mechanics. The player makes cho
 * FIFO eviction when a 4th joins a side.
 * Dialogue window slightly blurs everything behind it (реализация — вместе с артом/URP).
 * Active speaker is drawn on top of the other avatars on their side (brought to front on each line).
+* Sprites face the dialogue frame: mirrored per side via Image.flipHorizontal.
+* Source art orientation is configurable (FacesLeft / FacesRight / Front).
 
