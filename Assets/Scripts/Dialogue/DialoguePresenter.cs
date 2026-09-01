@@ -196,7 +196,7 @@ namespace Gabi.Dialogue
 
             if (!isStage)
             {
-                ShowAvatarFor(line.Speaker, line.Emotion);
+                ShowAvatarFor(line.Speaker, line.Emotion, line.MoveSide);
             }
         }
 
@@ -205,7 +205,7 @@ namespace Gabi.Dialogue
             _dialogPanel.color = isFog ? _panelThoughtFogColor : _panelNormalColor;
         }
 
-        private void ShowAvatarFor(string speakerName, string emotionName)
+        private void ShowAvatarFor(string speakerName, string emotionName, LineSide moveSide)
         {
             var entry = FindCastEntry(speakerName);
             if (entry == null)
@@ -213,9 +213,10 @@ namespace Gabi.Dialogue
                 return;
             }
 
-            var queue = entry.Side == DialogueSide.Left ? _leftAvatars : _rightAvatars;
-            var visible = FindVisible(queue, entry.Character);
-            if (visible != null)
+            var visible = FindVisibleAcross(entry.Character);
+            var targetSide = ResolveTargetSide(entry, visible, moveSide);
+
+            if (visible != null && visible.Side == targetSide)
             {
                 // Говорящий отрисовывается поверх остальных на своей стороне.
                 visible.Root.SetAsLastSibling();
@@ -223,7 +224,31 @@ namespace Gabi.Dialogue
                 return;
             }
 
-            JoinSide(entry, queue, emotionName);
+            if (visible != null)
+            {
+                // Персонаж переезжает на другую сторону прямо во время сцены.
+                MoveAvatar(visible, targetSide);
+                visible.Root.SetAsLastSibling();
+                ApplyPortrait(visible, entry.Character, emotionName);
+                return;
+            }
+
+            JoinSide(entry, GetQueue(targetSide), emotionName, targetSide);
+        }
+
+        private static DialogueSide ResolveTargetSide(CastEntry entry, AvatarInstance visible, LineSide moveSide)
+        {
+            if (moveSide == LineSide.Left)
+            {
+                return DialogueSide.Left;
+            }
+
+            if (moveSide == LineSide.Right)
+            {
+                return DialogueSide.Right;
+            }
+
+            return visible != null ? visible.Side : entry.Side;
         }
 
         private CastEntry FindCastEntry(string speakerName)
@@ -244,9 +269,17 @@ namespace Gabi.Dialogue
             return null;
         }
 
-        private static AvatarInstance FindVisible(Queue<AvatarInstance> queue, CharacterDefinition character)
+        private AvatarInstance FindVisibleAcross(CharacterDefinition character)
         {
-            foreach (var instance in queue)
+            foreach (var instance in _leftAvatars)
+            {
+                if (instance.Character == character)
+                {
+                    return instance;
+                }
+            }
+
+            foreach (var instance in _rightAvatars)
             {
                 if (instance.Character == character)
                 {
@@ -257,7 +290,12 @@ namespace Gabi.Dialogue
             return null;
         }
 
-        private void JoinSide(CastEntry entry, Queue<AvatarInstance> queue, string emotionName)
+        private Queue<AvatarInstance> GetQueue(DialogueSide side)
+        {
+            return side == DialogueSide.Left ? _leftAvatars : _rightAvatars;
+        }
+
+        private void JoinSide(CastEntry entry, Queue<AvatarInstance> queue, string emotionName, DialogueSide side)
         {
             int slot;
             if (queue.Count >= MaxAvatarsPerSide)
@@ -271,7 +309,7 @@ namespace Gabi.Dialogue
                 slot = FirstFreeSlot(queue);
             }
 
-            queue.Enqueue(CreateAvatar(entry, slot, emotionName));
+            queue.Enqueue(CreateAvatar(entry, slot, emotionName, side));
         }
 
         private int FirstFreeSlot(Queue<AvatarInstance> queue)
@@ -297,15 +335,10 @@ namespace Gabi.Dialogue
             return 0;
         }
 
-        private AvatarInstance CreateAvatar(CastEntry entry, int slot, string emotionName)
+        private AvatarInstance CreateAvatar(CastEntry entry, int slot, string emotionName, DialogueSide side)
         {
             var root = Instantiate(_avatarTemplate, _avatarRoot);
             root.gameObject.SetActive(true);
-            var anchors = entry.Side == DialogueSide.Left ? _leftSlotAnchors : _rightSlotAnchors;
-            root.anchorMin = anchors[slot];
-            root.anchorMax = anchors[slot];
-            root.pivot = new Vector2(0.5f, 0.5f);
-            root.anchoredPosition = Vector2.zero;
 
             var portrait = root.GetComponent<Image>();
             portrait.raycastTarget = false;
@@ -313,22 +346,70 @@ namespace Gabi.Dialogue
             nameLabel.text = entry.Character.DisplayName;
             nameLabel.raycastTarget = false;
 
-            // Зеркалим персонажа к центру: минус-масштаб по X, а табличке имени — встречный флип,
-            // чтобы текст не отзеркалился.
-            var flip = NeedsFlip(entry.Side);
-            root.localScale = new Vector3(flip ? -1f : 1f, 1f, 1f);
-            nameLabel.transform.localScale = new Vector3(flip ? -1f : 1f, 1f, 1f);
-
             var instance = new AvatarInstance
             {
                 Character = entry.Character,
                 SlotIndex = slot,
+                Side = side,
                 Root = root,
-                Portrait = portrait
+                Portrait = portrait,
+                NameLabel = nameLabel
             };
 
+            ApplyTransform(instance, side, slot);
             ApplyPortrait(instance, entry.Character, emotionName);
             return instance;
+        }
+
+        private void ApplyTransform(AvatarInstance instance, DialogueSide side, int slot)
+        {
+            var anchors = side == DialogueSide.Left ? _leftSlotAnchors : _rightSlotAnchors;
+            instance.Root.anchorMin = anchors[slot];
+            instance.Root.anchorMax = anchors[slot];
+            instance.Root.pivot = new Vector2(0.5f, 0.5f);
+            instance.Root.anchoredPosition = Vector2.zero;
+
+            // Зеркалим персонажа к центру; табличке имени — встречный флип, чтобы текст читался.
+            var flip = NeedsFlip(side);
+            instance.Root.localScale = new Vector3(flip ? -1f : 1f, 1f, 1f);
+            instance.NameLabel.transform.localScale = new Vector3(flip ? -1f : 1f, 1f, 1f);
+        }
+
+        private void MoveAvatar(AvatarInstance instance, DialogueSide targetSide)
+        {
+            RemoveFromQueue(instance);
+
+            var targetQueue = GetQueue(targetSide);
+            if (targetQueue.Count >= MaxAvatarsPerSide)
+            {
+                var evicted = targetQueue.Dequeue();
+                Destroy(evicted.Root.gameObject);
+            }
+
+            var slot = FirstFreeSlot(targetQueue);
+            instance.Side = targetSide;
+            instance.SlotIndex = slot;
+            ApplyTransform(instance, targetSide, slot);
+            targetQueue.Enqueue(instance);
+        }
+
+        private void RemoveFromQueue(AvatarInstance instance)
+        {
+            var queue = GetQueue(instance.Side);
+            var rest = new List<AvatarInstance>();
+            while (queue.Count > 0)
+            {
+                var item = queue.Dequeue();
+                if (item != instance)
+                {
+                    rest.Add(item);
+                }
+            }
+
+            foreach (var item in rest)
+            {
+                queue.Enqueue(item);
+            }
         }
 
         // Персонажи должны «смотреть» к центру: зеркалим сторону, противоположную исходному развороту арта.
@@ -414,8 +495,10 @@ namespace Gabi.Dialogue
         {
             public CharacterDefinition Character;
             public int SlotIndex;
+            public DialogueSide Side;
             public RectTransform Root;
             public Image Portrait;
+            public TMP_Text NameLabel;
             public Sprite CurrentSprite;
         }
     }

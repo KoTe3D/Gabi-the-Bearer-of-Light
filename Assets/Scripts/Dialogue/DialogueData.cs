@@ -22,6 +22,13 @@ namespace Gabi.Dialogue
         Right
     }
 
+    public enum LineSide
+    {
+        Inherit,
+        Left,
+        Right
+    }
+
     [System.Serializable]
     public sealed class DialogueLine
     {
@@ -29,6 +36,7 @@ namespace Gabi.Dialogue
         public string Speaker;
         public string Text;
         public string Emotion;
+        public LineSide MoveSide = LineSide.Inherit;
     }
 
     [System.Serializable]

@@ -1,0 +1,192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dec3cda59b663a489f8d4b5d8f82427, type: 3}
+  m_Name: Scene03_Homefriends
+  m_EditorClassIdentifier: Assembly-CSharp::Gabi.Dialogue.DialogueScene
+  _nodes:
+  - Kind: 0
+    Line:
+      Kind: 1
+      Speaker: "\u0413\u0430\u0431\u0438"
+      Text: 1
+      Emotion: joy
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0422\u043E\u043C\u0430\u0441"
+      Text: 2
+      Emotion: joy
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0410\u043C\u0438\u0446\u0438\u044F"
+      Text: 3
+      Emotion: anger
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u041C\u0430\u0439"
+      Text: 4
+      Emotion: joy
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0421\u0438\u044F"
+      Text: 5
+      Emotion: sadness
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u041A\u0430\u044D\u043B\u044C"
+      Text: 6
+      Emotion: joy
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u041C\u0430\u0439"
+      Text: 7
+      Emotion: sadness
+      MoveSide: 2
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0413\u0430\u0431\u0438"
+      Text: 8
+      Emotion: anger
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0410\u043C\u0438\u0446\u0438\u044F"
+      Text: 9
+      Emotion: joy
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0422\u043E\u043C\u0430\u0441"
+      Text: 10
+      Emotion: sadness
+      MoveSide: 1
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0421\u0438\u044F"
+      Text: 11
+      Emotion: sadness
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0421\u0438\u044F"
+      Text: 12
+      Emotion: Joy
+      MoveSide: 2
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: "\u0422\u043E\u043C\u0430\u0441"
+      Text: 13
+      Emotion: anger
+      MoveSide: 2
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: 
+      Text: 14
+      Emotion: 
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: 
+      Text: 15
+      Emotion: 
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: 
+      Text: 16
+      Emotion: 
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 0
+    Line:
+      Kind: 0
+      Speaker: 
+      Text: 17
+      Emotion: 
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  - Kind: 2
+    Line:
+      Kind: 0
+      Speaker: 
+      Text: 
+      Emotion: 
+      MoveSide: 0
+    Choices: []
+    NextSceneName: 
+  _cast:
+  - Character: {fileID: 11400000, guid: 5f9b87877cc13f4449f07250acc028f6, type: 2}
+    Side: 1
+  - Character: {fileID: 11400000, guid: b506938754e21be43adf1139119da8ce, type: 2}
+    Side: 1
+  - Character: {fileID: 11400000, guid: ab8b8fb8b8ac88642b986830012badb1, type: 2}
+    Side: 1
+  - Character: {fileID: 11400000, guid: 741dea84e4b69964c95a33131a29a446, type: 2}
+    Side: 0
+  - Character: {fileID: 11400000, guid: 7683c04a2f5ddc34885d2452bf2b2b8d, type: 2}
+    Side: 0
+  - Character: {fileID: 11400000, guid: 26637912cdead424eb3879d465bbfaad, type: 2}
+    Side: 0
+  _backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  _background: {fileID: 0}
